@@ -12,7 +12,6 @@
 	"dependencies": {
 		"crypto": "^1.0.1",
 		"egg": "^2.21.1",
-		"jssha": "^2.3.1",
 		"uuid": "^3.3.2"
 	},
 	"devDependencies": {

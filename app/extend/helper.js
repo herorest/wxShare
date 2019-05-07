@@ -1,19 +1,8 @@
 const fs = require('fs');
 
-// 随机字符串
-var createNonceStr = function () {
-    return Math.random().toString(36).substr(2, 15);
-};
-
-// 时间戳
-var createTimestamp = function () {
-    return parseInt(new Date().getTime() / 1000) + '';
-};
-
 // 排序拼接
 var raw = function (args) {
     var keys = Object.keys(args);
-    keys = keys.sort()
     var newArgs = {};
     keys.forEach(function (key) {
         newArgs[key.toLowerCase()] = args[key];
@@ -27,26 +16,29 @@ var raw = function (args) {
 };
 
 /**
- * @synopsis 签名算法 
+ * 签名算法 
+ * crypto 提供通用的加密和哈希算法
  *
  * @param jsapi_ticket 用于签名的 jsapi_ticket
  * @param url 用于签名的 url ，注意必须动态获取，不能 hardcode
  *
- * @returns
  */
-var sign = function (jsapi_ticket, url) {
-    var ret = {
-        jsapi_ticket: jsapi_ticket,
-        nonceStr: createNonceStr(),
-        timestamp: createTimestamp(),
-        url: url
+var sign = function (jsapi_ticket, url, appId) {
+    const uuidv1 = require('uuid/v1');
+    const noncestr = uuidv1();
+    const timestamp = new Date().valueOf();
+    const string1 = `jsapi_ticket=${jsapi_ticket}&noncestr=${noncestr}&timestamp=${timestamp}&url=${url}`;
+    const crypto = require('crypto');
+    const hash = crypto.createHash('sha1');
+    hash.update(string1);
+    const signature = hash.digest('hex');
+    return {
+        nonceStr: noncestr,
+        timestamp,
+        signature,
+        appId: appId,
+        jsapi_ticket
     };
-    var string = raw(ret);
-    jsSHA = require('jssha');
-    shaObj = new jsSHA(string, 'TEXT');
-    ret.signature = shaObj.getHash('SHA-1', 'HEX');
-
-    return ret;
 };
 
 var readFile = function (src) {
@@ -67,8 +59,16 @@ var writeFile = function(src, text){
     });
 }
 
+var checkResponse = function(result){
+    if (result.status === 200 && result.data){
+        return true;
+    }
+    return false;
+}
+
 module.exports = {
     sign, 
     readFile,
-    writeFile
+    writeFile,
+    checkResponse
 };
