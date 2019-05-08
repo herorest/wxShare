@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <title><%-title%></title>
+</head>
+
+<body>
+    <script src="/public/js/jquery.js"></script>
+    <script src="/public/js/vconsole.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script>
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i].trim();
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "";
+        }
+        // 请求签名
+        var token = getCookie('csrfToken');
+
+        var vConsole = new VConsole();
+
+        if(token){
+            var url = location.href.split('#')[0];
+            $.ajax({
+                url: url + "getTicket",
+                type: 'post',
+                data: {
+                    url: encodeURIComponent(url)
+                },
+                beforeSend: function (request) {
+                    request.setRequestHeader("x-csrf-token", token);
+                },
+                success: function (res) {
+                    if(res.code === 0){
+                        wx.config({
+                            debug: true,
+                            appId: res.data.appId,
+                            timestamp: res.data.timestamp,
+                            nonceStr: res.data.nonceStr,
+                            signature: res.data.signature,
+                            jsApiList: [
+                                'checkJsApi',
+                                'onMenuShareTimeline',
+                                'onMenuShareAppMessage',
+                                'onMenuShareQQ'
+                            ]
+                        }); 
+                        wx.ready(function () {
+                            var shareData = {
+                                title: '我的分享',
+                                desc: '我的文字介绍，详细的',
+                                link: url,
+                                imgUrl: url + "/public/images/icon.jpg"
+                            };
+                            wx.onMenuShareAppMessage(shareData);
+                            wx.onMenuShareTimeline(shareData);
+                            wx.onMenuShareQQ(shareData);
+                        });
+                        wx.error(function (res) {
+                            console.log(res.errMsg);
+                        });
+                    }else{
+                        console.log(res);
+                    }
+                    
+                }
+            });
+        }else{
+            alert('invalid csrf token');
+        }
+    </script>
+</body>
+
+</html>
