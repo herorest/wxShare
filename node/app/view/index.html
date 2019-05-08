@@ -25,8 +25,9 @@
 
         if(token){
             var url = location.href.split('#')[0];
+            var host = location.origin;
             $.ajax({
-                url: url + "getTicket",
+                url: host + "/getTicket",
                 type: 'post',
                 data: {
                     url: encodeURIComponent(url)
@@ -53,8 +54,8 @@
                             var shareData = {
                                 title: '我的分享',
                                 desc: '我的文字介绍，详细的',
-                                link: url,
-                                imgUrl: url + "/public/images/icon.jpg"
+                                link: host,
+                                imgUrl: host + "/public/images/icon.jpg"
                             };
                             wx.onMenuShareAppMessage(shareData);
                             wx.onMenuShareTimeline(shareData);
