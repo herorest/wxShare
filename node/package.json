@@ -5,17 +5,19 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "egg-bin dev"
+		"dev": "egg-bin dev",
+		"start": "egg-scripts start --port=7001 --daemon --title=egg-server-showcase",
+		"stop": "egg-scripts stop"
 	},
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"crypto": "^1.0.1",
 		"egg": "^2.21.1",
+		"egg-alinode": "^2.0.1",
+		"egg-scripts": "^2.11.0",
 		"egg-view": "^2.1.2",
-		"egg-view-assets": "^1.5.0",
 		"egg-view-ejs": "^2.0.0",
-		"egg-view-nunjucks": "^2.2.0",
 		"uuid": "^3.3.2"
 	},
 	"devDependencies": {

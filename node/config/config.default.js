@@ -17,4 +17,10 @@ module.exports = {
     view: {
         mapping: {'.html': 'ejs'}
     },
+
+    alinode: {
+        appid: '79675',
+        secret: '45f13dcb0bede80f956a0097978d1f4d97f70b34'
+    }
+    
 };

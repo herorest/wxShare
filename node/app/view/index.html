@@ -44,10 +44,8 @@
                             nonceStr: res.data.nonceStr,
                             signature: res.data.signature,
                             jsApiList: [
-                                'checkJsApi',
-                                'onMenuShareTimeline',
-                                'onMenuShareAppMessage',
-                                'onMenuShareQQ'
+                                'updateTimelineShareData',
+                                'updateAppMessageShareData'
                             ]
                         }); 
                         wx.ready(function () {
@@ -57,9 +55,8 @@
                                 link: host,
                                 imgUrl: host + "/public/images/icon.jpg"
                             };
-                            wx.onMenuShareAppMessage(shareData);
-                            wx.onMenuShareTimeline(shareData);
-                            wx.onMenuShareQQ(shareData);
+                            wx.updateTimelineShareData(shareData);
+                            wx.updateAppMessageShareData(shareData);
                         });
                         wx.error(function (res) {
                             console.log(res.errMsg);
